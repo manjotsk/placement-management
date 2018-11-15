@@ -12,6 +12,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var placementsRouter = require('./routes/placements');
+var organisationsRouter = require('./routes/organisations');
 
 var app = express();
 
@@ -24,9 +25,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, authorization, refreshtoken'
+  );
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE');
+    return res.status(200).json({});
+  }
+  next();
+});
 app.use('/', indexRouter);
 app.use('/placements', placementsRouter);
+app.use('/organisations', organisationsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
