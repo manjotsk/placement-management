@@ -2,7 +2,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../dbconnection');
 
-const yearlyOrganisations = sequelize.define('yearly_organizations', {
+const yearlyOrganizations = sequelize.define('yearly_organizations', {
     year: {
         type: Sequelize.STRING,
         autoIncrement: true,
@@ -31,4 +31,4 @@ const yearlyOrganisations = sequelize.define('yearly_organizations', {
     }
 );
 
-module.exports = yearlyOrganisations;
+module.exports = yearlyOrganizations;

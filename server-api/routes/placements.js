@@ -4,6 +4,6 @@ var sequelize = require('../database/dbconnection')
 /* GET users listing. */
 var userController = require('../controller/userController')
 
-router.get('/',userController.getCompanies);
+router.post('/',userController.getStudentsPlacedInCompanies);
 
 module.exports = router;
