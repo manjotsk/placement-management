@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-
+var sequelize = require('../database/dbconnection')
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+var userController = require('../controller/userController')
+
+router.get('/',userController.getCompanies);
 
 module.exports = router;
