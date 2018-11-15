@@ -1,3 +1,9 @@
+/**
+ * This piece of code was written by Manjot Singh
+ * and was ideated by Parv Kamal, Piyush Killa, Piyush kumar.
+ * 
+ */
+
 // var mysql = require("mysql");
 const Sequelize = require('sequelize');
 

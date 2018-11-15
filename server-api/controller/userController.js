@@ -1,3 +1,8 @@
+/**
+ * This piece of code was written by Manjot Singh
+ * and was ideated by Parv Kamal, Piyush Killa, Piyush kumar.
+ * 
+ */
 var yearlyOrganizationsModal = require('../database/modals/yearlyOrganisations')
 var studentPlacementModal = require('../database/modals/studentPlacementModal')
 var studentModal = require('../database/modals/studentModal')
