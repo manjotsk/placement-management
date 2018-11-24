@@ -7,8 +7,8 @@ var express = require('express');
 var router = express.Router();
 var sequelize = require('../database/dbconnection')
 /* GET users listing. */
-var userController = require('../controller/userController')
+var organisationController = require('../controller/organisationController')
 
-router.post('/',userController.getStudentsPlacedInCompanies);
+router.get('/',organisationController.getOrganisations);
 
 module.exports = router;

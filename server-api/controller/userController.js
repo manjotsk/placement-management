@@ -1,3 +1,8 @@
+/**
+ * This piece of code was written by Manjot Singh
+ * and was ideated by Parv Kamal, Piyush Killa, Piyush kumar.
+ * 
+ */
 var yearlyOrganizationsModal = require('../database/modals/yearlyOrganisations')
 var studentPlacementModal = require('../database/modals/studentPlacementModal')
 var studentModal = require('../database/modals/studentModal')
@@ -49,6 +54,13 @@ exports.getStudentsPlacedInCompanies = (req, res, next) => {
                 }
             },
         ]
+    }
+    console.log(JSON.stringify(req.body));
+
+    console.log(JSON.stringify(query));
+    
+    if(req.body.companies.names.length==0){
+        delete query.include[0].where['companyName']
     }
     studentPlacementModal.findAll(query).then((companies) => {
         res.status(200).send(companies)
