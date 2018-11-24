@@ -8,7 +8,7 @@ import FilterForm from "./components/FilterForm";
 import axios from 'axios'
 const { Meta } = Card;
 const { Header, Content, Footer } = Layout;
-const hostname = '172.20.10.2'
+const hostname = 'localhost'
 class App extends Component {
   state = {
     visible: false,

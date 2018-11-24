@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Select, Button } from 'antd';
 import axios from 'axios'
 import { Row, Col } from 'antd/lib/grid';
-const hostname = '172.20.10.2'
+const hostname = 'localhost'
 const Option = Select.Option
 export default class FilterForm extends Component {
     
