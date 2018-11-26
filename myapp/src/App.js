@@ -3,18 +3,60 @@ import logo from './logo.svg';
 import './App.css';
 import 'antd/dist/antd.css';
 import { Row, Col } from 'antd';
-import { Drawer, Button, Radio, Layout, Menu, Skeleton, Switch, Card, Icon, Avatar } from 'antd';
+import { 
+  Drawer, 
+  Button, 
+  Radio, 
+  Layout, 
+  Menu, 
+  Skeleton, 
+  Card, 
+  Icon, 
+  Avatar, 
+  Modal,
+  Popover,
+  Select,
+  Switch
+} from 'antd';
 import FilterForm from "./components/FilterForm";
-import axios from 'axios'
+import ShowGraph from "./components/ShowGraph";
+import axios from 'axios';
+const Option= Select.Option
 const { Meta } = Card;
 const { Header, Content, Footer } = Layout;
 const hostname = 'localhost'
 class App extends Component {
   state = {
     visible: false,
+    popoverVisible:false,
     placement: 'top',
-    studentPlacements: []
+    studentPlacements: [],
+    noOfStudentsPlacedYearly:[],
+    modalVisible:false,
+    xAxisGraph:[],
+    graphTitle:'',
+    graphType:'line'
   };
+
+  showModal = () => {
+    this.setState({
+      modalVisible: true,
+    });
+  }
+
+  handleModalOk = (e) => {
+    console.log(e);
+    this.setState({
+      modalVisible: false,
+    });
+  }
+
+  handleModalCancel = (e) => {
+    console.log(e);
+    this.setState({
+      modalVisible: false,
+    });
+  }
 
   showDrawer = () => {
     this.setState({
@@ -33,7 +75,9 @@ class App extends Component {
       placement: e.target.value,
     });
   }
-
+  handleVisibleChange = () => {
+    this.setState({ popoverVisible:!this.state.popoverVisible });
+  }
   render() {
     return (
       <Layout>
@@ -45,7 +89,11 @@ class App extends Component {
             onClose={this.onClose}
             visible={this.state.visible}
           >
-            <FilterForm updateValues={(e) => {
+            <FilterForm onFilter={()=>{
+              this.setState({
+                visible:false
+              })
+            }} updateValues={(e) => {
               var programs = e.programs.map((value) => {
                 return {
                   programCode: value
@@ -78,6 +126,52 @@ class App extends Component {
             <Button type="primary" onClick={this.showDrawer}>
               Filter
             </Button>
+            <Select defaultValue="lucy" style={{ width: 120 }} onChange={(e)=>{
+              this.setState({
+                graphToBeShown:e
+              },()=>{
+                switch(e){
+                  case 'PlacementVsYear':{
+                    return  axios.get('http://'+hostname+':3000/placements/noOfStudentsPlaced')
+                    .then((counts)=>{
+                      this.setState({
+                        xAxisGraph:counts.data.map(content=>{
+                          return content.count
+                        })
+                      },()=>{
+                        this.setState({
+                          modalVisible:true,
+                          graphTitle:'Number of Students placed, per year'
+                        })
+                      })
+                    })
+                  }
+                  case 'AvgSal':{
+                    return  axios.get('http://'+hostname+':3000/placements/getAvergeSalaryYearWise')
+                    .then((AvgSals)=>{
+                      this.setState({
+                        xAxisGraph:AvgSals.data.map(content=>{
+                          console.log(JSON.stringify(content.yearly_organizations[0].AvgSal))
+                          return content.yearly_organizations[0].AvgSal
+                        })
+                      },()=>{
+                        this.setState({
+                          modalVisible:true,
+                          graphTitle:'Average Salary Per Year'
+                        })
+                      })
+                    })  
+                  }
+                  
+
+                }
+              })
+            }}>
+              <Option value="PlacementVsYear">Yearly Placements</Option>
+              <Option value="AvgSal">Average Salary Per Year</Option>
+              <Option value="disabled" disabled>Disabled</Option>
+              <Option value="Yiminghe">yiminghe</Option>
+            </Select>
           </Menu>
         </Header>
         <Content style={{ padding: '50px 50px', marginTop: 64 }}>
@@ -117,6 +211,33 @@ class App extends Component {
                 })
               }
             </Row>
+          </div>
+          <div>
+          <Modal
+            title={this.state.graphTitle}
+            visible={this.state.modalVisible}
+            onOk={()=>this.handleModalOk()}
+            onCancel={()=>this.handleModalCancel()}
+          >
+          <Switch defaultChecked onChange={(e)=>{
+            this.setState({
+              graphType:e?'line':'bar'
+            })
+          }} />
+          <ShowGraph labels={
+            [
+              "2012-13",
+              "2013-14",
+              "2014-15",
+              "2015-16",
+              "2016-17"
+            ]
+          }
+          graphType={this.state.graphType}
+          dataset={this.state.xAxisGraph}
+          graphTitle={this.state.graphTitle}
+          />
+          </Modal>
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

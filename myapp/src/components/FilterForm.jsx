@@ -51,6 +51,7 @@ export default class FilterForm extends Component {
                 year:this.state.yearSelected,
             }
         )
+        this.props.onFilter()
     }
     
     render() {
