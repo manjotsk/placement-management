@@ -51,6 +51,7 @@ export default class FilterForm extends Component {
                 year:this.state.yearSelected,
             }
         )
+        this.props.onFilter()
     }
     
     render() {
@@ -95,11 +96,11 @@ export default class FilterForm extends Component {
                             >
                             {
                                 [
+                                    '2012-13',
                                     '2013-14',
                                     '2014-15',
                                     '2015-16',
                                     '2016-17',
-                                    '2017-18',
                                 ].map(value => {
                                     return <Option key={value}>{value}</Option>
                                 })

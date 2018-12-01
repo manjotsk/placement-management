@@ -11,4 +11,7 @@ var userController = require('../controller/userController')
 
 router.post('/',userController.getStudentsPlacedInCompanies);
 
+router.get('/noOfStudentsPlaced', userController.getStudentCountYearWise)
+router.get('/getAvergeSalaryYearWise', userController.getAvergeSalaryYearWise)
+
 module.exports = router;

@@ -37,7 +37,7 @@ const Op = sequelize.Op;
  */
 exports.getStudentsPlacedInCompanies = (req, res, next) => {
 
-    studentPlacementModal.hasMany(yearlyOrganizationsModal, { foreignKey: 'companyName' });
+    studentPlacementModal.hasMany(yearlyOrganizationsModal, { foreignKey: 'year' });
     var year = req.body.year.data
     var query = {
         where: {
@@ -58,11 +58,55 @@ exports.getStudentsPlacedInCompanies = (req, res, next) => {
     console.log(JSON.stringify(req.body));
 
     console.log(JSON.stringify(query));
-    
-    if(req.body.companies.names.length==0){
+
+    if (req.body.companies.names.length == 0) {
         delete query.include[0].where['companyName']
     }
     studentPlacementModal.findAll(query).then((companies) => {
         res.status(200).send(companies)
     })
+}
+exports.getStudentCountYearWise = (req, res, next) => {
+    studentPlacementModal.findAll({
+        attributes: [
+            'year',
+            [sequelize.fn('COUNT', sequelize.col('year')), 'count']
+        ],
+        where: {
+            placementIndex: 1
+        },
+        group: 'year',
+        raw: true,
+        logging: true
+    }).then((counts) => {
+        res.status(200).send(counts)
+    }).catch((err) => {
+        res.status(500).send(err)
+    });
+}
+exports.getAvergeSalaryYearWise = (req, res, next) => {
+    studentPlacementModal.hasMany(yearlyOrganizationsModal, { foreignKey: 'companyName' });
+    studentPlacementModal.findAll({
+        attributes:['year'],
+        include: [
+            {
+                model: yearlyOrganizationsModal,
+                attributes:[[sequelize.fn('AVG', sequelize.col('be_salary')), 'AvgSal']],
+                // where:{
+                //     BESalary:{
+                //         [Op.gt]:0
+                //     }
+                // }
+            },
+        ],
+        group: 'year',
+        logging: true,
+        where:{
+            placementIndex:1
+        }
+    }).then((counts) => {
+        res.status(200).send(counts)
+    }).catch((err) => {
+        res.status(500).send(err)
+    });
 }
